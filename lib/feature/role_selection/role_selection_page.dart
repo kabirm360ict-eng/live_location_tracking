@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:location_tracking/app/route/app_routes.dart';
+import 'package:location_tracking/core/constants/app_size.dart';
 
 class RoleSelectionPage extends StatelessWidget {
   const RoleSelectionPage({super.key});
@@ -11,39 +13,46 @@ class RoleSelectionPage extends StatelessWidget {
         centerTitle: true,
       ),
       body: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(AppSize.p24),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const Text(
+            Text(
               'Who are you?',
               textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
+              style: context.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 40),
+            AppSize.gapH32,
             _buildRoleCard(
               context,
-              title: 'Admin',
-              icon: Icons.admin_panel_settings,
-              color: Colors.blueAccent,
+              title: 'Hotelier',
+              icon: Icons.hotel,
+              
               onTap: () {
                 // TODO: Navigate to Admin Auth
                 debugPrint("Admin selected");
               },
             ),
-            const SizedBox(height: 20),
+            AppSize.gapH24,
             _buildRoleCard(
               context,
-              title: 'User',
-              icon: Icons.person,
-              color: Colors.green,
+              title: 'Residentail',
+              icon: Icons.home,
+              // color: Colors.green,
               onTap: () {
                 // TODO: Navigate to User Auth
                 debugPrint("User selected");
+              },
+            ),
+            AppSize.gapH24,
+            _buildRoleCard(
+              context,
+              title: 'Worker',
+              icon: Icons.person,
+              // color: Colors.green,
+              onTap: () {
+                Navigator.pushNamed(context,AppRoutes.jobSeekerLogin);
               },
             ),
           ],
@@ -56,30 +65,27 @@ class RoleSelectionPage extends StatelessWidget {
     BuildContext context, {
     required String title,
     required IconData icon,
-    required Color color,
+     Color? color,
     required VoidCallback onTap,
   }) {
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(16),
+      // borderRadius: BorderRadius.circular(16),
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 24),
+        padding: const EdgeInsets.symmetric(vertical: AppSize.p16),
         decoration: BoxDecoration(
-          color: color.withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: color.withValues(alpha: 0.5), width: 2),
+          // color: color.withValues(alpha: 0.1),
+          color: Theme.of(context).colorScheme.surface.withValues(alpha: .5),
+          borderRadius: BorderRadius.circular(AppSize.radiusLg),
+          // border: Border.all(color: color.withValues(alpha: 0.5), width: 2),
         ),
         child: Column(
           children: [
-            Icon(icon, size: 60, color: color),
-            const SizedBox(height: 12),
+            Icon(icon, size: AppSize.iconXl, color: color),
+            AppSize.gapH16,
             Text(
               title,
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: color,
-              ),
+              style: context.titleLarge?.copyWith(fontWeight: FontWeight.bold),
             ),
           ],
         ),

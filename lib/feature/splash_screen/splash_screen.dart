@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:location_tracking/core/constants/app_colors.dart';
+import 'package:location_tracking/core/constants/app_size.dart';
 import '../role_selection/role_selection_page.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -29,23 +31,20 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
+            const Icon(
               Icons.location_on,
               size: 80,
-              color: Colors.blueAccent,
+              color: AppColors.primary,
             ),
-            SizedBox(height: 16),
+            AppSize.gapH16,
             Text(
               'Location Tracker',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
+              style: context.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
             ),
           ],
         ),

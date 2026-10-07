@@ -10,8 +10,7 @@ class AppTheme {
 
   // ২. লাইট থিম (Light Theme)
   // অ্যাপের ডিফল্ট বা লাইট মোডের জন্য এই ThemeData আমরা ব্যবহার করবো।
-  static ThemeData get lightTheme {
-    return ThemeData(
+  static ThemeData lightTheme = ThemeData(
       // scaffoldBackgroundColor: প্রতিটি স্ক্রিন বা পেজের ব্যাকগ্রাউন্ড কালার কী হবে সেটা ঠিক করে।
       scaffoldBackgroundColor: AppColors.backgroundColor,
 
@@ -20,6 +19,36 @@ class AppTheme {
         seedColor: AppColors.primary,
         primary: AppColors.primary, // সরাসরি primary color সেট করে দেওয়া হলো
       ),
+      extensions: [
+        CustomThemeExtension(
+          successColor: Colors.green, // লাইট মোডের জন্য সবুজ
+          warningColor: Colors.orange, // লাইট মোডের জন্য কমলা
+        ),
+      ],
+      
+    );
+  
+
+    // ৩. ডার্ক থিম (Dark Theme)
+  static ThemeData get darkTheme {
+    return ThemeData(
+      // ডার্ক মোডের জন্য পুরো অ্যাপের ব্যাকগ্রাউন্ড কালার 
+      scaffoldBackgroundColor: Colors.white, // অথবা আপনার AppColors থেকে কোনো ডার্ক কালার
+
+      colorScheme: ColorScheme.fromSeed(
+        brightness: Brightness.dark, // ফ্লাটারকে বলে দিচ্ছি এটা ডার্ক থিম
+        seedColor: AppColors.primary,
+        primary: AppColors.primary,
+      ),
+
+      // ডার্ক মোডে কাস্টম কালারগুলো কেমন হবে, সেটা এখানে বলে দিচ্ছি
+      extensions: const [
+        CustomThemeExtension(
+          successColor: Colors.lightGreenAccent, // ডার্ক মোডে সবুজটা একটু হালকা/উজ্জ্বল হলে ভালো লাগে
+          warningColor: Colors.deepOrangeAccent, // ডার্ক মোডের কমলা
+        ),
+      ],
     );
   }
+
 }
