@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:location_tracking/app/route/app_routes.dart';
 import 'package:location_tracking/core/constants/app_size.dart';
 import 'package:location_tracking/feature/job_seeker/auth/presentation/bloc/auth_job_bloc.dart';
 
@@ -34,7 +35,16 @@ class _SavedAddressPageState extends State<SavedAddressPage> {
           IconButton(
             icon: const Icon(Icons.edit),
             onPressed: () {
-              // TODO: Navigate to Edit Address
+              final state = context.read<AuthJobBloc>().state;
+              ProfileGetJobSeekerModel? currentProfile;
+              if (state is GetProfileJobSeekerSuccessState) {
+                currentProfile = state.profileGetJobSeekerModel;
+              }
+              Navigator.pushNamed(context, AppRoutes.editAddressPage, arguments: currentProfile).then((value) {
+                if (value == true) {
+                  context.read<AuthJobBloc>().add(GetProfileJobSeekerEvent());
+                }
+              });
             },
           ),
         ],
@@ -275,7 +285,13 @@ class _SavedAddressPageState extends State<SavedAddressPage> {
                   child: SizedBox(
                     width: double.infinity,
                     child: ElevatedButton.icon(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.pushNamed(context, AppRoutes.editAddressPage, arguments: profile).then((value) {
+                          if (value == true) {
+                            context.read<AuthJobBloc>().add(GetProfileJobSeekerEvent());
+                          }
+                        });
+                      },
                       icon: const Icon(Icons.edit_location_alt, color: Colors.black87),
                       label: const Text("Edit Registered Address", style: TextStyle(color: Colors.black87, fontWeight: FontWeight.bold, fontSize: 16)),
                       style: ElevatedButton.styleFrom(

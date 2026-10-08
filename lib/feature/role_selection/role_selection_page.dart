@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:location_tracking/app/route/app_routes.dart';
+import 'package:location_tracking/core/constants/app_colors.dart';
 import 'package:location_tracking/core/constants/app_size.dart';
 
 class RoleSelectionPage extends StatelessWidget {
@@ -28,7 +29,7 @@ class RoleSelectionPage extends StatelessWidget {
               context,
               title: 'Hotelier',
               icon: Icons.hotel,
-              
+              color: AppColors.primary,
               onTap: () {
                 // TODO: Navigate to Admin Auth
                 debugPrint("Admin selected");
@@ -39,7 +40,7 @@ class RoleSelectionPage extends StatelessWidget {
               context,
               title: 'Residentail',
               icon: Icons.home,
-              // color: Colors.green,
+              color: AppColors.primary,
               onTap: () {
                 // TODO: Navigate to User Auth
                 debugPrint("User selected");
@@ -50,7 +51,7 @@ class RoleSelectionPage extends StatelessWidget {
               context,
               title: 'Worker',
               icon: Icons.person,
-              // color: Colors.green,
+              color: AppColors.primary,
               onTap: () {
                 Navigator.pushNamed(context,AppRoutes.jobSeekerLogin);
               },
@@ -70,12 +71,11 @@ class RoleSelectionPage extends StatelessWidget {
   }) {
     return InkWell(
       onTap: onTap,
-      // borderRadius: BorderRadius.circular(16),
+      borderRadius: BorderRadius.circular(AppSize.radiusLg),
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: AppSize.p16),
         decoration: BoxDecoration(
-          // color: color.withValues(alpha: 0.1),
-          color: Theme.of(context).colorScheme.surface.withValues(alpha: .5),
+          color: color?.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(AppSize.radiusLg),
           // border: Border.all(color: color.withValues(alpha: 0.5), width: 2),
         ),

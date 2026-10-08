@@ -52,19 +52,19 @@ final class LogOutEvent extends AuthJobEvent {}
 //   PasswordChangeEvent(this.passwordChangeModel);
 // }
 
-// //for get profile
+//for get profile
 class GetProfileJobSeekerEvent extends AuthJobEvent {
   final bool isRefresh;
   final ProfileGetJobSeekerModel? profile;
   GetProfileJobSeekerEvent({this.isRefresh = false, this.profile});
 }
 
-// class UpdateProfileJobSeekerEvent extends AuthJobEvent {
-//   final ProfileUpdateJobSeekerModel profileUpdateJobSeekerModel;
-//   final List<SendFileModel> files;
+class UpdateProfileJobSeekerEvent extends AuthJobEvent {
+  final ProfileUpdateJobSeekerModel profileUpdateJobSeekerModel;
+  final List<SendFileModel> files;
 
-//   UpdateProfileJobSeekerEvent({required this.profileUpdateJobSeekerModel, required this.files});
-// }
+  UpdateProfileJobSeekerEvent({required this.profileUpdateJobSeekerModel, required this.files});
+}
 
 // class UpdateVerifyDocumentsJobSeekerEvent extends AuthJobEvent {
 //   final List<SendFileModel> files;

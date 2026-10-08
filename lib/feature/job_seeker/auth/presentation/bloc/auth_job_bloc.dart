@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:location_tracking/core/dio/injection_container.dart';
 import 'package:location_tracking/feature/job_seeker/profile/data/data_source/profile_job_seeker_remote_data_source.dart';
 import 'package:location_tracking/feature/job_seeker/profile/data/model/profile_get_job_seeker_model.dart';
+import 'package:location_tracking/feature/job_seeker/profile/data/model/profile_update_job_seeker_model.dart';
+import 'package:location_tracking/feature/job_seeker/profile/presentation/widget/send_file_model.dart';
 import '../../../../../core/constants/app_urls.dart';
 import '../../../../../core/errors/exceptions.dart';
 import '../../../../../core/network/api_client2.dart';
@@ -42,7 +44,7 @@ class AuthJobBloc extends Bloc<AuthJobEvent, AuthJobState> {
     //! get profile
     on<GetProfileJobSeekerEvent>(_getProfile);
     // //! update profile
-    // on<UpdateProfileJobSeekerEvent>(_updateProfile);
+    on<UpdateProfileJobSeekerEvent>(_updateProfile);
     // //! update verify documents
     // on<UpdateVerifyDocumentsJobSeekerEvent>(_updateVerifyDocuments);
   }
@@ -242,28 +244,28 @@ class AuthJobBloc extends Bloc<AuthJobEvent, AuthJobState> {
   }
 
   //for update profile
-  // Future<void> _updateProfile(UpdateProfileJobSeekerEvent event, Emitter<AuthJobState> emit) async {
-  //   emit(UpdateProfileJobSeekerLoadingState());
-  //   try {
-  //     final result = await ProfileJobSeekerRemoteDataSource.updateProfile(payload: event.profileUpdateJobSeekerModel, file: event.files);
-  //     await result.fold(
-  //       (ifLeft) async => emit(UpdateProfileJobSeekerFailedState(message: ifLeft.message)),
-  //       (ifRight) async {
-  //         if (event.profileUpdateJobSeekerModel.preferredJob != null) {
-  //           await getIt<AuthLocalDB>().setPreferredJob(event.profileUpdateJobSeekerModel.preferredJob);
-  //         }
-  //         profileImage = ifRight.photo;
-  //         emit(UpdateProfileJobSeekerSuccessState());
-  //         emit(GetProfileJobSeekerSuccessState(profileGetJobSeekerModel: ifRight));
-  //       },
-  //     );
-  //   } catch (e, stackTrace) {
-  //     emit(UpdateProfileJobSeekerFailedState(message: handleException(e, stackTrace).message));
-  //     if (kDebugMode) {
-  //       print("error: $e \n stackTrace: $stackTrace");
-  //     }
-  //   }
-  // }
+  Future<void> _updateProfile(UpdateProfileJobSeekerEvent event, Emitter<AuthJobState> emit) async {
+    emit(UpdateProfileJobSeekerLoadingState());
+    try {
+      final result = await ProfileJobSeekerRemoteDataSource.updateProfile(payload: event.profileUpdateJobSeekerModel, file: event.files);
+      await result.fold(
+        (ifLeft) async => emit(UpdateProfileJobSeekerFailedState(message: ifLeft.message)),
+        (ifRight) async {
+          if (event.profileUpdateJobSeekerModel.preferredJob != null) {
+            await getIt<AuthLocalDB>().setPreferredJob(event.profileUpdateJobSeekerModel.preferredJob);
+          }
+          profileImage = ifRight.photo;
+          emit(UpdateProfileJobSeekerSuccessState());
+          emit(GetProfileJobSeekerSuccessState(profileGetJobSeekerModel: ifRight));
+        },
+      );
+    } catch (e, stackTrace) {
+      emit(UpdateProfileJobSeekerFailedState(message: handleException(e, stackTrace).message));
+      if (kDebugMode) {
+        print("error: $e \n stackTrace: $stackTrace");
+      }
+    }
+  }
 
   //for update verify documents (id_copy, work_permit)
   // Future<void> _updateVerifyDocuments(UpdateVerifyDocumentsJobSeekerEvent event, Emitter<AuthJobState> emit) async {
