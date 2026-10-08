@@ -97,18 +97,18 @@ final class PasswordChangeErrorState extends AuthJobState {
 
 //for get profile
 
-// final class GetProfileJobSeekerLoadingState extends AuthJobState {}
+final class GetProfileJobSeekerLoadingState extends AuthJobState {}
 
-// final class GetProfileJobSeekerSuccessState extends AuthJobState {
-//   final ProfileGetJobSeekerModel profileGetJobSeekerModel;
-//   GetProfileJobSeekerSuccessState({required this.profileGetJobSeekerModel});
-// }
+final class GetProfileJobSeekerSuccessState extends AuthJobState {
+  final ProfileGetJobSeekerModel profileGetJobSeekerModel;
+  GetProfileJobSeekerSuccessState({required this.profileGetJobSeekerModel});
+}
 
-// final class GetProfileJobSeekerFailedState extends AuthJobState {
-//   final String message;
+final class GetProfileJobSeekerFailedState extends AuthJobState {
+  final String message;
 
-//   GetProfileJobSeekerFailedState({required this.message});
-// }
+  GetProfileJobSeekerFailedState({required this.message});
+}
 
 //!for update
 

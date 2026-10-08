@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:location_tracking/app/route/app_routes.dart';
 import 'package:location_tracking/core/constants/app_size.dart';
 
 class JobSeekerHomePage extends StatefulWidget {
@@ -48,17 +49,16 @@ class _JobSeekerHomePageState extends State<JobSeekerHomePage> {
             Text(
               'You have successfully logged in.',
               textAlign: TextAlign.center,
-              style: context.bodyLarge?.copyWith(
-                    color: theme.colorScheme.surface
-                  ),
             ),
             AppSize.gapH24,
             ElevatedButton.icon(
               onPressed: () {
                 // TODO: Navigate to Edit Profile Page
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Edit Profile Clicked')),
-                );
+                // ScaffoldMessenger.of(context).showSnackBar(
+                //   const SnackBar(content: Text('Edit Profile Clicked')),
+                // );
+                // Navigator.pushNamed(context, Approutes)
+                Navigator.pushNamed(context, AppRoutes.jobSeekerSavedAddress);
               },
               icon: const Icon(Icons.edit),
               label: const Text('Edit Profile'),

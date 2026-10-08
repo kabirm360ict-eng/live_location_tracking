@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:location_tracking/app/route/app_routes.dart';
 import 'package:location_tracking/feature/job_seeker/auth/presentation/page/login_page_job_seeker.dart';
+import 'package:location_tracking/feature/job_seeker/profile/presentation/pages/saved_address_pages.dart';
 import 'package:location_tracking/feature/splash_screen/splash_screen.dart';
 import 'package:page_transition/page_transition.dart';
 
@@ -19,7 +20,12 @@ class AppRouter {
         child: LoginPageJobSeeker(),
         settings: settings
         );
-      
+      case AppRoutes.jobSeekerSavedAddress:
+       return PageTransition(
+        type: PageTransitionType.fade,
+        child: SavedAddressPage(),
+        settings: settings
+        );
 
       default:
        return MaterialPageRoute(builder: (_) => Scaffold(

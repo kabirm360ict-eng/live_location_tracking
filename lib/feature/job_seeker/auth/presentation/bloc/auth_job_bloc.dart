@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:location_tracking/core/dio/injection_container.dart';
+import 'package:location_tracking/feature/job_seeker/profile/data/data_source/profile_job_seeker_remote_data_source.dart';
+import 'package:location_tracking/feature/job_seeker/profile/data/model/profile_get_job_seeker_model.dart';
 import '../../../../../core/constants/app_urls.dart';
 import '../../../../../core/errors/exceptions.dart';
 import '../../../../../core/network/api_client2.dart';
@@ -38,7 +40,7 @@ class AuthJobBloc extends Bloc<AuthJobEvent, AuthJobState> {
     on<LogOutEvent>(_logout);
     // on<PasswordChangeEvent>(_passwordChange);
     //! get profile
-    // on<GetProfileJobSeekerEvent>(_getProfile);
+    on<GetProfileJobSeekerEvent>(_getProfile);
     // //! update profile
     // on<UpdateProfileJobSeekerEvent>(_updateProfile);
     // //! update verify documents
@@ -192,52 +194,52 @@ class AuthJobBloc extends Bloc<AuthJobEvent, AuthJobState> {
   //   }
   // }
 
-  // //for get profile
-  // String? profileImage;
-  // Future<void> _getProfile(GetProfileJobSeekerEvent event, Emitter<AuthJobState> emit) async {
-  //   if (event.profile != null) {
-  //     final r = event.profile!;
-  //     profileImage = r.photo;
-  //     emit(GetProfileJobSeekerSuccessState(profileGetJobSeekerModel: r));
-  //     String userId = r.userId.toString();
-  //     String userType = r.userType.toString();
-  //     await getIt<AuthLocalDB>().setUserId(userId);
-  //     await getIt<AuthLocalDB>().setUserType(userType);
-  //     await getIt<AuthLocalDB>().setAccountStatus(r.accountStatus ?? '');
-  //     if (r.preferredJob != null) {
-  //       await getIt<AuthLocalDB>().setPreferredJob(r.preferredJob);
-  //     }
-  //     await SocketNotificationService().initSocketForJobSeeker(r.userId.toString());
-  //     return;
-  //   }
+  //for get profile
+  String? profileImage;
+  Future<void> _getProfile(GetProfileJobSeekerEvent event, Emitter<AuthJobState> emit) async {
+    if (event.profile != null) {
+      final r = event.profile!;
+      profileImage = r.photo;
+      emit(GetProfileJobSeekerSuccessState(profileGetJobSeekerModel: r));
+      String userId = r.userId.toString();
+      String userType = r.userType.toString();
+      await getIt<AuthLocalDB>().setUserId(userId);
+      await getIt<AuthLocalDB>().setUserType(userType);
+      await getIt<AuthLocalDB>().setAccountStatus(r.accountStatus ?? '');
+      if (r.preferredJob != null) {
+        await getIt<AuthLocalDB>().setPreferredJob(r.preferredJob);
+      }
+      // await SocketNotificationService().initSocketForJobSeeker(r.userId.toString());
+      return;
+    }
 
-  //   final token = await getIt<AuthLocalDB>().getToken();
-  //   if (token == null || token.isEmpty) {
-  //     emit(GetProfileJobSeekerFailedState(message: 'Not logged in'));
-  //     return;
-  //   }
-  //   if ((state is GetProfileJobSeekerSuccessState || state is GetProfileJobSeekerLoadingState) && !event.isRefresh) {
-  //     return;
-  //   }
-  //   emit(GetProfileJobSeekerLoadingState());
-  //   final result = await ProfileJobSeekerRemoteDataSource.getProfile();
-  //   await result.fold(
-  //     (l) async => emit(GetProfileJobSeekerFailedState(message: l.message)),
-  //     (r) async {
-  //       profileImage = r.photo;
-  //       emit(GetProfileJobSeekerSuccessState(profileGetJobSeekerModel: r));
-  //       String userId = r.userId.toString();
-  //       String userType = r.userType.toString();
-  //       await getIt<AuthLocalDB>().setUserId(userId);
-  //       await getIt<AuthLocalDB>().setUserType(userType);
-  //       await getIt<AuthLocalDB>().setAccountStatus(r.accountStatus ?? '');
-  //       if (r.preferredJob != null) {
-  //         await getIt<AuthLocalDB>().setPreferredJob(r.preferredJob);
-  //       }
-  //       await SocketNotificationService().initSocketForJobSeeker(r.userId.toString());
-  //     },
-  //   );
-  // }
+    final token = await getIt<AuthLocalDB>().getToken();
+    if (token == null || token.isEmpty) {
+      emit(GetProfileJobSeekerFailedState(message: 'Not logged in'));
+      return;
+    }
+    if ((state is GetProfileJobSeekerSuccessState || state is GetProfileJobSeekerLoadingState) && !event.isRefresh) {
+      return;
+    }
+    emit(GetProfileJobSeekerLoadingState());
+    final result = await ProfileJobSeekerRemoteDataSource.getProfile();
+    await result.fold(
+      (l) async => emit(GetProfileJobSeekerFailedState(message: l.message)),
+      (r) async {
+        profileImage = r.photo;
+        emit(GetProfileJobSeekerSuccessState(profileGetJobSeekerModel: r));
+        String userId = r.userId.toString();
+        String userType = r.userType.toString();
+        await getIt<AuthLocalDB>().setUserId(userId);
+        await getIt<AuthLocalDB>().setUserType(userType);
+        await getIt<AuthLocalDB>().setAccountStatus(r.accountStatus ?? '');
+        if (r.preferredJob != null) {
+          await getIt<AuthLocalDB>().setPreferredJob(r.preferredJob);
+        }
+        // await SocketNotificationService().initSocketForJobSeeker(r.userId.toString());
+      },
+    );
+  }
 
   //for update profile
   // Future<void> _updateProfile(UpdateProfileJobSeekerEvent event, Emitter<AuthJobState> emit) async {
