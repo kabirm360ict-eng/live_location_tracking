@@ -9,54 +9,54 @@ class RoleSelectionPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Select Role'),
-        centerTitle: true,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(AppSize.p24),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text(
-              'Who are you?',
-              textAlign: TextAlign.center,
-              style: context.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
-            ),
-            AppSize.gapH32,
-            _buildRoleCard(
-              context,
-              title: 'Hotelier',
-              icon: Icons.hotel,
-              color: AppColors.primary,
-              onTap: () {
-                // TODO: Navigate to Admin Auth
-                debugPrint("Admin selected");
-              },
-            ),
-            AppSize.gapH24,
-            _buildRoleCard(
-              context,
-              title: 'Residentail',
-              icon: Icons.home,
-              color: AppColors.primary,
-              onTap: () {
-                // TODO: Navigate to User Auth
-                debugPrint("User selected");
-              },
-            ),
-            AppSize.gapH24,
-            _buildRoleCard(
-              context,
-              title: 'Worker',
-              icon: Icons.person,
-              color: AppColors.primary,
-              onTap: () {
-                Navigator.pushNamed(context,AppRoutes.jobSeekerLogin);
-              },
-            ),
-          ],
+      appBar: AppBar(title: const Text('Select Role'), centerTitle: true),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(AppSize.p24),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                'Who are you?',
+                textAlign: TextAlign.center,
+                style: context.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              AppSize.gapH32,
+              _buildRoleCard(
+                context,
+                title: 'Hotelier',
+                icon: Icons.hotel,
+                color: AppColors.primary,
+                onTap: () {
+                  Navigator.pushNamed(context, AppRoutes.hotelierLogin);
+                },
+              ),
+              AppSize.gapH24,
+              _buildRoleCard(
+                context,
+                title: 'Residentail',
+                icon: Icons.home,
+                color: AppColors.primary,
+                onTap: () {
+                  // TODO: Navigate to User Auth
+                  debugPrint("User selected");
+                },
+              ),
+              AppSize.gapH24,
+              _buildRoleCard(
+                context,
+                title: 'Worker',
+                icon: Icons.person,
+                color: AppColors.primary,
+                onTap: () {
+                  Navigator.pushNamed(context, AppRoutes.jobSeekerLogin);
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -66,7 +66,7 @@ class RoleSelectionPage extends StatelessWidget {
     BuildContext context, {
     required String title,
     required IconData icon,
-     Color? color,
+    Color? color,
     required VoidCallback onTap,
   }) {
     return InkWell(

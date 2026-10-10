@@ -16,6 +16,16 @@ import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
 import 'package:shared_preferences/shared_preferences.dart' as _i460;
 
+import '../../feature/hotelier/auth/data/remote_data_source/hotelier_auth_remote_datasource.dart'
+    as _i491;
+import '../../feature/hotelier/auth/data/repository_impl/hotelier_auth_repository_impl.dart'
+    as _i912;
+import '../../feature/hotelier/auth/domain/repository/hotelier_auth_repository.dart'
+    as _i948;
+import '../../feature/hotelier/auth/domain/use_cases/hotelier_login_usecase.dart'
+    as _i433;
+import '../../feature/hotelier/auth/presentation/bloc/hotelier_auth_bloc.dart'
+    as _i564;
 import '../../feature/job_seeker/auth/data/datasource/auth_remote_datasource_job.dart'
     as _i15;
 import '../../feature/job_seeker/auth/data/repositories_impl/auth_repository_impl.dart'
@@ -52,6 +62,9 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i60.AuthLocalDB(gh<_i558.FlutterSecureStorage>()),
     );
     gh.lazySingleton<_i997.ApiClient2>(() => _i997.ApiClient2(gh<_i361.Dio>()));
+    gh.lazySingleton<_i491.HotelierAuthRemoteDataSource>(
+      () => _i491.HotelierAuthRemoteDataSource(gh<_i60.AuthLocalDB>()),
+    );
     gh.lazySingleton<_i15.AuthRemoteDataSourceJob>(
       () => _i15.AuthRemoteDataSourceJob(gh<_i60.AuthLocalDB>()),
     );
@@ -59,6 +72,11 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i975.AuthRepositoryImpl(
         authRemoteDataSourceJob: gh<_i15.AuthRemoteDataSourceJob>(),
         authLocalDB: gh<_i60.AuthLocalDB>(),
+      ),
+    );
+    gh.lazySingleton<_i948.HotelierAuthRepository>(
+      () => _i912.HotelierAuthRepositoryImpl(
+        remoteDataSource: gh<_i491.HotelierAuthRemoteDataSource>(),
       ),
     );
     gh.factory<_i27.FcmTokenUsecase>(
@@ -72,6 +90,12 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i908.AuthJobBloc>(
       () => _i908.AuthJobBloc(gh<_i827.LoginUsecase>()),
+    );
+    gh.factory<_i433.HotelierLoginUseCase>(
+      () => _i433.HotelierLoginUseCase(gh<_i948.HotelierAuthRepository>()),
+    );
+    gh.lazySingleton<_i564.HotelierAuthBloc>(
+      () => _i564.HotelierAuthBloc(gh<_i433.HotelierLoginUseCase>()),
     );
     return this;
   }
