@@ -21,6 +21,17 @@ class _SavedAddressPageState extends State<SavedAddressPage> {
     context.read<AuthJobBloc>().add(GetProfileJobSeekerEvent());
   }
 
+  Future<void> _navigateToEditAddress(ProfileGetJobSeekerModel? currentProfile) async {
+    final value = await Navigator.pushNamed(
+      context,
+      AppRoutes.editAddressPage,
+      arguments: currentProfile,
+    );
+    if (value == true && mounted) {
+      context.read<AuthJobBloc>().add(GetProfileJobSeekerEvent(isRefresh: true));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,11 +51,7 @@ class _SavedAddressPageState extends State<SavedAddressPage> {
               if (state is GetProfileJobSeekerSuccessState) {
                 currentProfile = state.profileGetJobSeekerModel;
               }
-              Navigator.pushNamed(context, AppRoutes.editAddressPage, arguments: currentProfile).then((value) {
-                if (value == true) {
-                  context.read<AuthJobBloc>().add(GetProfileJobSeekerEvent());
-                }
-              });
+              _navigateToEditAddress(currentProfile);
             },
           ),
         ],
@@ -64,12 +71,24 @@ class _SavedAddressPageState extends State<SavedAddressPage> {
             profile = state.profileGetJobSeekerModel;
           }
           
-          final streetAddress = profile?.homeAddress?.toString().trim() ?? '123 Main Street, Springfield';
-          final city = profile?.city?.toString().trim() ?? 'Chittagong';
-          final country = profile?.country?.toString().trim() ?? 'Bangladesh';
-          final postalCode = profile?.homePostalCode?.toString().trim() ?? '12366';
-          final latitude = profile?.latitude?.toString().trim() ?? '40.730610';
-          final longitude = profile?.longitude?.toString().trim() ?? '-73.935242';
+          final streetAddress = (profile?.homeAddress != null && profile!.homeAddress.toString().trim().isNotEmpty)
+              ? profile.homeAddress.toString().trim()
+              : 'No address registered';
+          final city = (profile?.city != null && profile!.city.toString().trim().isNotEmpty)
+              ? profile.city.toString().trim()
+              : 'N/A';
+          final country = (profile?.country != null && profile!.country.toString().trim().isNotEmpty)
+              ? profile.country.toString().trim()
+              : 'Bangladesh';
+          final postalCode = (profile?.homePostalCode != null && profile!.homePostalCode.toString().trim().isNotEmpty)
+              ? profile.homePostalCode.toString().trim()
+              : 'N/A';
+          final latitude = (profile?.latitude != null && profile!.latitude.toString().trim().isNotEmpty)
+              ? profile.latitude.toString().trim()
+              : 'Not Available';
+          final longitude = (profile?.longitude != null && profile!.longitude.toString().trim().isNotEmpty)
+              ? profile.longitude.toString().trim()
+              : 'Not Available';
 
           return SafeArea(
             child: Column(
@@ -202,7 +221,7 @@ class _SavedAddressPageState extends State<SavedAddressPage> {
                               Container(
                                 padding: const EdgeInsets.all(10),
                                 decoration: BoxDecoration(
-                                  color: Colors.tealAccent.shade100.withOpacity(0.5),
+                                  color: Colors.tealAccent.shade100.withValues(alpha: 0.5),
                                   borderRadius: BorderRadius.circular(AppSize.radiusMd),
                                 ),
                                 child: Icon(Icons.my_location, color: Colors.teal.shade700),
@@ -285,13 +304,7 @@ class _SavedAddressPageState extends State<SavedAddressPage> {
                   child: SizedBox(
                     width: double.infinity,
                     child: ElevatedButton.icon(
-                      onPressed: () {
-                        Navigator.pushNamed(context, AppRoutes.editAddressPage, arguments: profile).then((value) {
-                          if (value == true) {
-                            context.read<AuthJobBloc>().add(GetProfileJobSeekerEvent());
-                          }
-                        });
-                      },
+                      onPressed: () => _navigateToEditAddress(profile),
                       icon: const Icon(Icons.edit_location_alt, color: Colors.black87),
                       label: const Text("Edit Registered Address", style: TextStyle(color: Colors.black87, fontWeight: FontWeight.bold, fontSize: 16)),
                       style: ElevatedButton.styleFrom(

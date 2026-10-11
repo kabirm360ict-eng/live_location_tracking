@@ -254,9 +254,15 @@ class AuthJobBloc extends Bloc<AuthJobEvent, AuthJobState> {
           if (event.profileUpdateJobSeekerModel.preferredJob != null) {
             await getIt<AuthLocalDB>().setPreferredJob(event.profileUpdateJobSeekerModel.preferredJob);
           }
-          profileImage = ifRight.photo;
+          final freshResult = await ProfileJobSeekerRemoteDataSource.getProfile();
+          await freshResult.fold(
+            (l) async {},
+            (r) async {
+              profileImage = r.photo;
+              emit(GetProfileJobSeekerSuccessState(profileGetJobSeekerModel: r));
+            },
+          );
           emit(UpdateProfileJobSeekerSuccessState());
-          emit(GetProfileJobSeekerSuccessState(profileGetJobSeekerModel: ifRight));
         },
       );
     } catch (e, stackTrace) {

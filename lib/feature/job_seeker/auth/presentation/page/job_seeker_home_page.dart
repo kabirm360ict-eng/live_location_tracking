@@ -26,6 +26,7 @@ class _JobSeekerHomePageState extends State<JobSeekerHomePage> {
     final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: const Text('Home'),
         centerTitle: true,
         actions: [

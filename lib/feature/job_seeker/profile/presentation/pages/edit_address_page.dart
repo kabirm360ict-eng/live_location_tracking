@@ -327,57 +327,94 @@ class _EditAddressPageState extends State<EditAddressPage> {
                   AppSize.gapH24,
                   
                   // Address Live Preview Card
-                  Container(
-                    padding: const EdgeInsets.all(AppSize.p16),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      border: Border.all(color: Colors.amber.shade200),
-                      borderRadius: BorderRadius.circular(AppSize.radiusLg),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  ListenableBuilder(
+                    listenable: Listenable.merge([
+                      _addressLine1Controller,
+                      _addressLine2Controller,
+                      _cityController,
+                      _stateController,
+                      _postalCodeController,
+                      _countryController,
+                    ]),
+                    builder: (context, _) {
+                      final parts = [
+                        _addressLine1Controller.text.trim(),
+                        _addressLine2Controller.text.trim(),
+                        _cityController.text.trim(),
+                        _stateController.text.trim(),
+                        _postalCodeController.text.trim(),
+                        _countryController.text.trim(),
+                      ].where((s) => s.isNotEmpty).toList();
+                      final previewAddress = parts.isNotEmpty
+                          ? parts.join(", ")
+                          : "No address entered yet";
+                      final previewPostal = _postalCodeController.text.trim().isNotEmpty
+                          ? _postalCodeController.text.trim()
+                          : "Postal";
+                      final previewCountry = _countryController.text.trim().isNotEmpty
+                          ? _countryController.text.trim()
+                          : "Bangladesh";
+
+                      return Container(
+                        padding: const EdgeInsets.all(AppSize.p16),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          border: Border.all(color: Colors.amber.shade200),
+                          borderRadius: BorderRadius.circular(AppSize.radiusLg),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                const Icon(Icons.remove_red_eye_outlined, size: 16),
-                                AppSize.gapW8,
-                                const Text("Address Live Preview", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+                                Row(
+                                  children: [
+                                    const Icon(Icons.remove_red_eye_outlined, size: 16),
+                                    AppSize.gapW8,
+                                    const Text("Address Live Preview", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+                                  ],
+                                ),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                  decoration: BoxDecoration(
+                                    color: Colors.amber.shade100,
+                                    borderRadius: BorderRadius.circular(AppSize.radiusSm),
+                                  ),
+                                  child: Text(previewPostal, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 10)),
+                                ),
                               ],
                             ),
-                            Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                              decoration: BoxDecoration(
-                                color: Colors.amber.shade100,
-                                borderRadius: BorderRadius.circular(AppSize.radiusSm),
-                              ),
-                              child: const Text("12366", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 10)),
+                            AppSize.gapH16,
+                            Text(
+                              previewAddress,
+                              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                            ),
+                            AppSize.gapH16,
+                            Row(
+                              children: [
+                                const Icon(Icons.public, size: 12, color: Colors.grey),
+                                const SizedBox(width: 4),
+                                Text(previewCountry, style: const TextStyle(color: Colors.grey, fontSize: 12)),
+                                const SizedBox(width: 8),
+                                const Text("•", style: TextStyle(color: Colors.grey, fontSize: 12)),
+                                const SizedBox(width: 8),
+                                Icon(Icons.location_on, size: 12, color: Colors.green.shade600),
+                                const SizedBox(width: 4),
+                                Text(
+                                  hasCoordinates ? "Pin attached" : "No pin",
+                                  style: TextStyle(
+                                    color: hasCoordinates ? Colors.green.shade600 : Colors.grey,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ),
-                        AppSize.gapH16,
-                        const Text(
-                          "123 Main Street, Springfield, Chittagong, Chittagong Division, 12366, Bangladesh",
-                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-                        ),
-                        AppSize.gapH16,
-                        Row(
-                          children: [
-                            const Icon(Icons.public, size: 12, color: Colors.grey),
-                            const SizedBox(width: 4),
-                            const Text("Bangladesh", style: TextStyle(color: Colors.grey, fontSize: 12)),
-                            const SizedBox(width: 8),
-                            const Text("•", style: TextStyle(color: Colors.grey, fontSize: 12)),
-                            const SizedBox(width: 8),
-                            Icon(Icons.location_on, size: 12, color: Colors.green.shade600),
-                            const SizedBox(width: 4),
-                            Text("Pin attached", style: TextStyle(color: Colors.green.shade600, fontSize: 12, fontWeight: FontWeight.bold)),
-                          ],
-                        ),
-                      ],
-                    ),
+                      );
+                    },
                   ),
                   AppSize.gapH24,
                   
@@ -433,6 +470,7 @@ class _EditAddressPageState extends State<EditAddressPage> {
                           profileUpdateJobSeekerModel: ProfileUpdateJobSeekerModel(
                             address: _addressLine1Controller.text,
                             city: _cityController.text,
+                            state: _stateController.text,
                             country: _countryController.text,
                             postalCode: _postalCodeController.text,
                             latitude: _latitudeController.text, 
