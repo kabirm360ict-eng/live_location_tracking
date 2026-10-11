@@ -226,22 +226,27 @@ class _HotelierSavedAddressPageState extends State<HotelierSavedAddressPage> {
                                 children: [
                                   Expanded(
                                     child: _buildInfoBox(
-                                      "POSTCODE",
-                                      postalCode,
+                                      "TOWN/CITY",
+                                      profile?.city?.toString() ??
+                                          "Active",
                                     ),
                                   ),
                                   AppSize.gapW8,
                                   Expanded(
                                     child: _buildInfoBox(
-                                      "ORGANIZATION STATUS",
-                                      profile?.organizationStatus?.toString() ??
-                                          "Active",
+                                      "POSTCODE",
+                                      postalCode,
                                     ),
                                   ),
+                                  // AppSize.gapW8,
                                 ],
                               ),
                               AppSize.gapH16,
-
+                              _buildInfoBox(
+                                "COUNTRY",
+                                profile?.country?.toString() ?? "N/A",
+                              ),
+                              AppSize.gapH16,
                               // Copy Button
                               Align(
                                 alignment: Alignment.centerLeft,

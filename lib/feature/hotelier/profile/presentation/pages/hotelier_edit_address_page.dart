@@ -33,24 +33,15 @@ class _HotelierEditAddressPageState extends State<HotelierEditAddressPage> {
   void initState() {
     super.initState();
     final p = widget.initialProfile;
-    _organizationNameController = TextEditingController(
-      text: p?.organizationName?.toString() ?? '',
-    );
-    _addressController = TextEditingController(
-      text: p?.address?.toString() ?? '',
-    );
-    _cityController = TextEditingController();
-    _stateController = TextEditingController();
-    _postalCodeController = TextEditingController(
-      text: p?.postalCode?.toString() ?? '',
-    );
-    _countryController = TextEditingController();
-    _latitudeController = TextEditingController(
-      text: p?.latitude?.toString() ?? '',
-    );
-    _longitudeController = TextEditingController(
-      text: p?.longitude?.toString() ?? '',
-    );
+    _organizationNameController = TextEditingController(text: p?.organizationName?.toString() ?? '');
+    _addressController = TextEditingController(text: p?.address?.toString() ?? '');
+    _cityController = TextEditingController(text: p?.city.toString() ?? '');
+    _stateController = TextEditingController(text: p?.state?.toString() ?? '');
+    _postalCodeController = TextEditingController(text: p?.postalCode?.toString() ?? '');
+    _countryController = TextEditingController(text: p?.country?.toString() ?? '');
+    _latitudeController = TextEditingController(text: p?.latitude?.toString() ?? '');
+    _longitudeController = TextEditingController(text: p?.longitude?.toString() ?? '');
+    print("widget.initialProfile: ${widget.initialProfile}");
   }
 
   @override
@@ -73,13 +64,10 @@ class _HotelierEditAddressPageState extends State<HotelierEditAddressPage> {
               payload: ProfileUpdateRequestModelHiring(
                 organizationName: _organizationNameController.text.trim(),
                 organizationAddressAddress: _addressController.text.trim(),
-                organizationAddressPostalCode:
-                    _postalCodeController.text.trim(),
-                organizationAddressLatitude:
-                    _latitudeController.text.trim(),
-                organizationAddressLongitude:
-                    _longitudeController.text.trim(),
-                country: _countryController.text.trim(),
+                organizationAddressPostalCode: _postalCodeController.text.trim(),
+                organizationAddressLatitude: _latitudeController.text.trim(),
+                organizationAddressLongitude: _longitudeController.text.trim(),
+                country: _countryController.text.trim(),  
                 state: _stateController.text.trim(),
                 city: _cityController.text.trim(),
                 is2FaOn: widget.initialProfile?.is2FaOn,

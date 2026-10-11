@@ -1,3 +1,7 @@
+// To parse this JSON data, do
+//
+//     final profileResponseModelHiring = profileResponseModelHiringFromJson(jsonString);
+
 import 'dart:convert';
 
 ProfileResponseModelHiring profileResponseModelHiringFromJson(String str) =>
@@ -34,6 +38,9 @@ class ProfileResponseModelHiring {
   final bool? isHomeAddress;
   final dynamic locationCreatedAt;
   final dynamic locationUpdatedAt;
+  final dynamic city;
+  final dynamic state;
+  final dynamic country;
 
   ProfileResponseModelHiring({
     this.userId,
@@ -63,6 +70,9 @@ class ProfileResponseModelHiring {
     this.isHomeAddress,
     this.locationCreatedAt,
     this.locationUpdatedAt,
+    this.city,
+    this.state,
+    this.country,
   });
 
   factory ProfileResponseModelHiring.fromJson(Map<String, dynamic> json) =>
@@ -94,6 +104,9 @@ class ProfileResponseModelHiring {
         isHomeAddress: json["is_home_address"],
         locationCreatedAt: json["location_created_at"],
         locationUpdatedAt: json["location_updated_at"],
+        city: json["city"],
+        state: json["state"],
+        country: json["country"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -124,5 +137,8 @@ class ProfileResponseModelHiring {
     "is_home_address": isHomeAddress,
     "location_created_at": locationCreatedAt,
     "location_updated_at": locationUpdatedAt,
+    "city": city,
+    "state": state,
+    "country": country,
   };
 }

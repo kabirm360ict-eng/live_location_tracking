@@ -16,6 +16,7 @@ class _HotelierHomePageState extends State<HotelierHomePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Hotelier Home'),
+        automaticallyImplyLeading: false,
         centerTitle: true,
         actions: [
           IconButton(
