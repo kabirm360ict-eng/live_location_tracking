@@ -52,8 +52,8 @@ abstract class RegisterModule {
 
                 if (upperType == 'JOB_SEEKER') {
                   redirectRoute = AppRoutes.jobSeekerLogin;
-                } else if (upperType == 'HOTELIER') {
-                  // redirectRoute = AppRoutes.loginPageHiringManager;
+                } else if (upperType == 'HOTELIER' || upperType == 'HIRING') {
+                  redirectRoute = AppRoutes.hotelierLogin;
                 } else if (upperType == 'RESIDENTIAL') {
                   // redirectRoute = AppRoutes.loginPageRes;
                 }
