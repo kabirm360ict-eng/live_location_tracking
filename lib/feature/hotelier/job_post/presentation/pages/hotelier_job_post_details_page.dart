@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:location_tracking/core/constants/app_size.dart';
 import '../../domain/entity/hotelier_single_job_post_response_entity.dart';
 import '../bloc/job_post_bloc.dart';
+import 'job_seeker_location_map_page.dart';
 
 class HotelierJobPostDetailsPage extends StatefulWidget {
   final int jobPostDetailId;
@@ -212,6 +213,8 @@ class _HotelierJobPostDetailsPageState
                     // Applicant / Job Seeker Details Card
                     if (data.jobSeekerDetails != null) ...[
                       _buildApplicantCard(data.jobSeekerDetails!, theme),
+                      AppSize.gapH16,
+                      _buildMapButton(data.jobSeekerDetails!),
                       AppSize.gapH16,
                     ],
 
@@ -461,6 +464,59 @@ class _HotelierJobPostDetailsPageState
               ),
             ],
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMapButton(SingleJobSeekerDetailsEntity applicant) {
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton.icon(
+        onPressed: () {
+          final lat = double.tryParse('${applicant.latitude ?? ''}');
+          final lng = double.tryParse('${applicant.longitude ?? ''}');
+          if (lat != null && lng != null && lat != 0.0 && lng != 0.0) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => JobSeekerLocationMapPage(
+                  jobSeekerName: applicant.jobSeekerName ?? 'Applicant',
+                  address: applicant.locationAddress ??
+                      applicant.city ??
+                      'Location not specified',
+                  latitude: lat,
+                  longitude: lng,
+                ),
+              ),
+            );
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text(
+                  'Job seeker location coordinates are not available yet.',
+                ),
+                backgroundColor: Colors.orange,
+              ),
+            );
+          }
+        },
+        icon: const Icon(Icons.location_on, color: Colors.white),
+        label: const Text(
+          'Map',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.blue.shade700,
+          elevation: 2,
+          padding: const EdgeInsets.symmetric(vertical: 14),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppSize.radiusMd),
+          ),
         ),
       ),
     );
