@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:location_tracking/app/route/app_routes.dart';
-import 'package:location_tracking/feature/hotelier/auth/presentation/pages/hotelier_home_page.dart';
+import 'package:location_tracking/feature/hotelier/home_page/presentation/pages/hotelier_home_page.dart';
 import 'package:location_tracking/feature/hotelier/auth/presentation/pages/hotelier_login_page.dart';
+import 'package:location_tracking/feature/hotelier/job_post/presentation/pages/create_job_post.dart';
 import 'package:location_tracking/feature/hotelier/profile/data/model/profile_response_model_hiring.dart';
 import 'package:location_tracking/feature/hotelier/profile/presentation/pages/hotelier_edit_address_page.dart';
 import 'package:location_tracking/feature/hotelier/profile/presentation/pages/hotelier_saved_address_page.dart';
@@ -85,6 +86,12 @@ class AppRouter {
         type: PageTransitionType.fade,
         settings: settings,
         child: CustomAddressPage()
+        );
+      case AppRoutes.createJobPostPage:
+       return PageTransition(
+        type: PageTransitionType.fade,
+        settings: settings,
+        child: CreateJobPostPage()
         );
 
       default:

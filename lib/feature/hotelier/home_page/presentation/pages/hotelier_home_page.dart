@@ -34,7 +34,7 @@ class _HotelierHomePageState extends State<HotelierHomePage> {
       body: Padding(
         padding: const EdgeInsets.all(AppSize.p24),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Icon(
@@ -56,12 +56,22 @@ class _HotelierHomePageState extends State<HotelierHomePage> {
               textAlign: TextAlign.center,
             ),
             AppSize.gapH24,
+            // ElevatedButton.icon(
+            //   onPressed: () {
+            //     Navigator.pushNamed(context, AppRoutes.hotelierSavedAddress);
+            //   },
+            //   icon: const Icon(Icons.location_on),
+            //   label: const Text('Saved Address'),
+            //   style: ElevatedButton.styleFrom(
+            //     padding: const EdgeInsets.symmetric(vertical: AppSize.p16),
+            //   ),
+            // ),
             ElevatedButton.icon(
               onPressed: () {
-                Navigator.pushNamed(context, AppRoutes.hotelierSavedAddress);
+                Navigator.pushNamed(context, AppRoutes.createJobPostPage);
               },
-              icon: const Icon(Icons.location_on),
-              label: const Text('Saved Address'),
+              icon: const Icon(Icons.post_add),
+              label: const Text('Create Job Post'),
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: AppSize.p16),
               ),

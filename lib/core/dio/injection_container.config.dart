@@ -26,6 +26,16 @@ import '../../feature/hotelier/auth/domain/use_cases/hotelier_login_usecase.dart
     as _i433;
 import '../../feature/hotelier/auth/presentation/bloc/hotelier_auth_bloc.dart'
     as _i564;
+import '../../feature/hotelier/job_post/data/data_source/job_post_remote_data_source.dart'
+    as _i815;
+import '../../feature/hotelier/job_post/data/repository_impl/job_post_repository_impl.dart'
+    as _i577;
+import '../../feature/hotelier/job_post/domain/entity/create_job_post_usecase.dart'
+    as _i482;
+import '../../feature/hotelier/job_post/domain/repository/job_post_repository.dart'
+    as _i884;
+import '../../feature/hotelier/job_post/presentation/bloc/job_post_bloc.dart'
+    as _i50;
 import '../../feature/job_seeker/auth/data/datasource/auth_remote_datasource_job.dart'
     as _i15;
 import '../../feature/job_seeker/auth/data/repositories_impl/auth_repository_impl.dart'
@@ -68,6 +78,12 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i15.AuthRemoteDataSourceJob>(
       () => _i15.AuthRemoteDataSourceJob(gh<_i60.AuthLocalDB>()),
     );
+    gh.lazySingleton<_i815.JobPostRemoteDataSource>(
+      () => _i815.JobPostRemoteDataSourceImpl(
+        gh<_i60.AuthLocalDB>(),
+        gh<_i997.ApiClient2>(),
+      ),
+    );
     gh.lazySingleton<_i1036.AuthRepositories>(
       () => _i975.AuthRepositoryImpl(
         authRemoteDataSourceJob: gh<_i15.AuthRemoteDataSourceJob>(),
@@ -79,6 +95,11 @@ extension GetItInjectableX on _i174.GetIt {
         remoteDataSource: gh<_i491.HotelierAuthRemoteDataSource>(),
       ),
     );
+    gh.lazySingleton<_i884.JobPostRepository>(
+      () => _i577.JobPostRepositoryImpl(
+        remoteDataSource: gh<_i815.JobPostRemoteDataSource>(),
+      ),
+    );
     gh.factory<_i27.FcmTokenUsecase>(
       () => _i27.FcmTokenUsecase(gh<_i1036.AuthRepositories>()),
     );
@@ -88,11 +109,17 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i655.LogoutUsecase>(
       () => _i655.LogoutUsecase(gh<_i1036.AuthRepositories>()),
     );
+    gh.factory<_i482.CreateJobPostUseCase>(
+      () => _i482.CreateJobPostUseCase(gh<_i884.JobPostRepository>()),
+    );
     gh.lazySingleton<_i908.AuthJobBloc>(
       () => _i908.AuthJobBloc(gh<_i827.LoginUsecase>()),
     );
     gh.factory<_i433.HotelierLoginUseCase>(
       () => _i433.HotelierLoginUseCase(gh<_i948.HotelierAuthRepository>()),
+    );
+    gh.lazySingleton<_i50.JobPostBloc>(
+      () => _i50.JobPostBloc(gh<_i482.CreateJobPostUseCase>()),
     );
     gh.lazySingleton<_i564.HotelierAuthBloc>(
       () => _i564.HotelierAuthBloc(gh<_i433.HotelierLoginUseCase>()),

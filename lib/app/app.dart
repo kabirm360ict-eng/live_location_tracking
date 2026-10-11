@@ -5,6 +5,7 @@ import 'package:location_tracking/app/route/app_routes.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:location_tracking/core/dio/injection_container.dart';
 import 'package:location_tracking/feature/hotelier/auth/presentation/bloc/hotelier_auth_bloc.dart';
+import 'package:location_tracking/feature/hotelier/job_post/presentation/bloc/job_post_bloc.dart';
 import 'package:location_tracking/feature/job_seeker/auth/presentation/bloc/auth_job_bloc.dart';
 
 class MyApp extends StatelessWidget {
@@ -18,6 +19,7 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider(create: (context) => getIt<AuthJobBloc>()),
         BlocProvider(create: (context) => getIt<HotelierAuthBloc>()),
+        BlocProvider(create: (context) => getIt<JobPostBloc>()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
