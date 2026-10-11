@@ -210,9 +210,20 @@ class _HotelierHomePageState extends State<HotelierHomePage> {
                       return Card(
                         elevation: 2,
                         shape: RoundedRectangleBorder(borderRadius:BorderRadius.circular(AppSize.radiusMd),),
-                        child: Padding(
-                          padding: const EdgeInsets.all(AppSize.p16),
-                          child: Column(
+                        child: InkWell(
+                          borderRadius: BorderRadius.circular(AppSize.radiusMd),
+                          onTap: () {
+                            if (item.id != null) {
+                              Navigator.pushNamed(
+                                context,
+                                AppRoutes.hotelierJobPostDetails,
+                                arguments: item.id,
+                              );
+                            }
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.all(AppSize.p16),
+                            child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               // Row with Title & Status Badge
@@ -360,8 +371,9 @@ class _HotelierHomePageState extends State<HotelierHomePage> {
                             ],
                           ),
                         ),
-                      );
-                    },
+                      ),
+                    );
+                  },
                   );
                 },
               ),

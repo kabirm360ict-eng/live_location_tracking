@@ -10,3 +10,9 @@ final class CreateJobPostEvent extends JobPostEvent {
 }
 
 final class GetHotelierJobPostsEvent extends JobPostEvent {}
+
+final class GetHotelierJobPostDetailsEvent extends JobPostEvent {
+  final int id;
+
+  GetHotelierJobPostDetailsEvent(this.id);
+}

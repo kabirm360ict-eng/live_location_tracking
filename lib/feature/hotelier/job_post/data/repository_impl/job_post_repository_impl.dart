@@ -3,6 +3,7 @@ import 'package:injectable/injectable.dart';
 import '../../../../../core/errors/exceptions.dart';
 import '../../../../../core/errors/failures.dart';
 import '../../domain/entity/hotelier_job_posts_response_entity.dart';
+import '../../domain/entity/hotelier_single_job_post_response_entity.dart';
 import '../../domain/entity/job_post_request_entity.dart';
 import '../../domain/entity/job_post_response_entity.dart';
 import '../../domain/repository/job_post_repository.dart';
@@ -34,6 +35,17 @@ class JobPostRepositoryImpl implements JobPostRepository {
       getHotelierJobPosts() async {
     try {
       final response = await remoteDataSource.getHotelierJobPosts();
+      return Right(response.toEntity());
+    } catch (e, stackTrace) {
+      return Left(handleException(e, stackTrace));
+    }
+  }
+
+  @override
+  Future<Either<Failure, HotelierSingleJobPostResponseEntity>>
+      getHotelierJobPostDetails(int id) async {
+    try {
+      final response = await remoteDataSource.getHotelierJobPostDetails(id);
       return Right(response.toEntity());
     } catch (e, stackTrace) {
       return Left(handleException(e, stackTrace));

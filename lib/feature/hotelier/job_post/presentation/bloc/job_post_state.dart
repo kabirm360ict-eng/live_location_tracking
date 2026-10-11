@@ -34,3 +34,18 @@ final class GetHotelierJobPostsFailedState extends JobPostState {
 
   GetHotelierJobPostsFailedState({required this.message});
 }
+
+// Get Hotelier Job Post Details States
+final class GetHotelierJobPostDetailsLoadingState extends JobPostState {}
+
+final class GetHotelierJobPostDetailsSuccessState extends JobPostState {
+  final HotelierSingleJobPostResponseEntity response;
+
+  GetHotelierJobPostDetailsSuccessState({required this.response});
+}
+
+final class GetHotelierJobPostDetailsFailedState extends JobPostState {
+  final String message;
+
+  GetHotelierJobPostDetailsFailedState({required this.message});
+}

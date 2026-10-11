@@ -11,4 +11,5 @@ class AppRoutes {
   static const String editAddressPage = "/edit_address_page"; 
   static const String customAddressPage = "/custom_address_page";
   static const String createJobPostPage = "/create_job_post_page";
+  static const String hotelierJobPostDetails = "/hotelier_job_post_details";
 }

@@ -3,6 +3,7 @@ import '../../../../../core/constants/app_urls.dart';
 import '../../../../../core/local_database/auth_db.dart';
 import '../../../../../core/network/api_client2.dart';
 import '../model/hotelier_job_posts_response_model.dart';
+import '../model/hotelier_single_job_post_response_model.dart';
 import '../model/job_post_request_model.dart';
 import '../model/job_post_response_model.dart';
 
@@ -12,6 +13,8 @@ abstract class JobPostRemoteDataSource {
   });
 
   Future<HotelierJobPostsResponseModel> getHotelierJobPosts();
+
+  Future<HotelierSingleJobPostResponseModel> getHotelierJobPostDetails(int id);
 }
 
 @LazySingleton(as: JobPostRemoteDataSource)
@@ -44,6 +47,22 @@ class JobPostRemoteDataSourceImpl implements JobPostRemoteDataSource {
     );
 
     return HotelierJobPostsResponseModel.fromJson(
-        result as Map<String, dynamic>);
+      result as Map<String, dynamic>,
+    );
+  }
+
+  @override
+  Future<HotelierSingleJobPostResponseModel> getHotelierJobPostDetails(
+    int id,
+  ) async {
+    final token = await _localDB.getToken();
+    final result = await _apiClient.get(
+      url: '${AppUrls.jobPostsHiring}/$id',
+      tokenAuthorization: token,
+    );
+
+    return HotelierSingleJobPostResponseModel.fromJson(
+      result as Map<String, dynamic>,
+    );
   }
 }
