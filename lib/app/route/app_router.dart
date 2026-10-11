@@ -10,6 +10,8 @@ import 'package:location_tracking/feature/job_seeker/location/presentation/page/
 import 'package:location_tracking/feature/job_seeker/profile/presentation/pages/edit_address_page.dart';
 import 'package:location_tracking/feature/job_seeker/profile/presentation/pages/saved_address_pages.dart';
 import 'package:location_tracking/feature/job_seeker/profile/data/model/profile_get_job_seeker_model.dart';
+import 'package:location_tracking/feature/role_selection/role_selection_page.dart';
+import 'package:location_tracking/feature/job_seeker/auth/presentation/page/job_seeker_home_page.dart';
 import 'package:location_tracking/feature/splash_screen/splash_screen.dart';
 import 'package:page_transition/page_transition.dart';
 
@@ -20,6 +22,18 @@ class AppRouter {
        return PageTransition(
         type: PageTransitionType.fade,
         child: SplashScreen(),
+        settings: settings
+        );
+      case AppRoutes.roleSelectionPage:
+       return PageTransition(
+        type: PageTransitionType.fade,
+        child: const RoleSelectionPage(),
+        settings: settings
+        );
+      case AppRoutes.jobSeekerHome:
+       return PageTransition(
+        type: PageTransitionType.fade,
+        child: const JobSeekerHomePage(),
         settings: settings
         );
       case AppRoutes.jobSeekerLogin:

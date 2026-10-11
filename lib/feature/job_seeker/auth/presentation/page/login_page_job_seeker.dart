@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:location_tracking/app/route/app_routes.dart';
 import 'package:location_tracking/core/constants/app_size.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:location_tracking/core/widgets/custom_text_form_field.dart';
 import 'package:location_tracking/feature/job_seeker/auth/data/models/login_request_model_job.dart';
 import 'package:location_tracking/feature/job_seeker/auth/presentation/bloc/auth_job_bloc.dart';
-import 'package:location_tracking/feature/job_seeker/auth/presentation/page/job_seeker_home_page.dart';
 
 class LoginPageJobSeeker extends StatefulWidget {
   const LoginPageJobSeeker({super.key});
@@ -56,11 +56,9 @@ class _LoginPageJobSeekerState extends State<LoginPageJobSeeker> {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(content: Text('Login Successful!')),
             );
-            Navigator.pushReplacement(
+            Navigator.pushReplacementNamed(
               context,
-              MaterialPageRoute(
-                builder: (context) => const JobSeekerHomePage(),
-              ),
+              AppRoutes.jobSeekerHome,
             );
           } else if (state is LoginFailedStateJob) {
             ScaffoldMessenger.of(context).showSnackBar(
