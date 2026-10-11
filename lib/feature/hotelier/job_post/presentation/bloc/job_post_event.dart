@@ -8,3 +8,5 @@ final class CreateJobPostEvent extends JobPostEvent {
 
   CreateJobPostEvent(this.request);
 }
+
+final class GetHotelierJobPostsEvent extends JobPostEvent {}

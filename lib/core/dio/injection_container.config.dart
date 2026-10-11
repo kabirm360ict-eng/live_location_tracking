@@ -30,10 +30,12 @@ import '../../feature/hotelier/job_post/data/data_source/job_post_remote_data_so
     as _i815;
 import '../../feature/hotelier/job_post/data/repository_impl/job_post_repository_impl.dart'
     as _i577;
-import '../../feature/hotelier/job_post/domain/entity/create_job_post_usecase.dart'
+import '../../feature/hotelier/job_post/domain/use_cases/create_job_post_usecase.dart'
     as _i482;
 import '../../feature/hotelier/job_post/domain/repository/job_post_repository.dart'
     as _i884;
+import '../../feature/hotelier/job_post/domain/use_cases/get_hotelier_job_posts_usecase.dart'
+    as _i207;
 import '../../feature/hotelier/job_post/presentation/bloc/job_post_bloc.dart'
     as _i50;
 import '../../feature/job_seeker/auth/data/datasource/auth_remote_datasource_job.dart'
@@ -112,6 +114,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i482.CreateJobPostUseCase>(
       () => _i482.CreateJobPostUseCase(gh<_i884.JobPostRepository>()),
     );
+    gh.factory<_i207.GetHotelierJobPostsUseCase>(
+      () => _i207.GetHotelierJobPostsUseCase(gh<_i884.JobPostRepository>()),
+    );
     gh.lazySingleton<_i908.AuthJobBloc>(
       () => _i908.AuthJobBloc(gh<_i827.LoginUsecase>()),
     );
@@ -119,7 +124,10 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i433.HotelierLoginUseCase(gh<_i948.HotelierAuthRepository>()),
     );
     gh.lazySingleton<_i50.JobPostBloc>(
-      () => _i50.JobPostBloc(gh<_i482.CreateJobPostUseCase>()),
+      () => _i50.JobPostBloc(
+        gh<_i482.CreateJobPostUseCase>(),
+        gh<_i207.GetHotelierJobPostsUseCase>(),
+      ),
     );
     gh.lazySingleton<_i564.HotelierAuthBloc>(
       () => _i564.HotelierAuthBloc(gh<_i433.HotelierLoginUseCase>()),

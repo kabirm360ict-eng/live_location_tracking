@@ -5,6 +5,7 @@ sealed class JobPostState {}
 
 final class JobPostInitial extends JobPostState {}
 
+// Create Job Post States
 final class CreateJobPostLoadingState extends JobPostState {}
 
 final class CreateJobPostSuccessState extends JobPostState {
@@ -17,4 +18,19 @@ final class CreateJobPostFailedState extends JobPostState {
   final String message;
 
   CreateJobPostFailedState({required this.message});
+}
+
+// Get Hotelier Job Posts States
+final class GetHotelierJobPostsLoadingState extends JobPostState {}
+
+final class GetHotelierJobPostsSuccessState extends JobPostState {
+  final HotelierJobPostsResponseEntity response;
+
+  GetHotelierJobPostsSuccessState({required this.response});
+}
+
+final class GetHotelierJobPostsFailedState extends JobPostState {
+  final String message;
+
+  GetHotelierJobPostsFailedState({required this.message});
 }
