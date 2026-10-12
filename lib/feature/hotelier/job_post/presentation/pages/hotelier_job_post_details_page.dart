@@ -491,10 +491,9 @@ class _HotelierJobPostDetailsPageState
               context,
               MaterialPageRoute(
                 builder: (_) => JobSeekerLocationMapPage(
+                  jobSeekerId: applicant.jobSeekerId,
                   jobSeekerName: applicant.jobSeekerName ?? 'Applicant',
-                  address: applicant.locationAddress ??
-                      applicant.city ??
-                      'Location not specified',
+                  address: applicant.locationAddress ??applicant.city ??'Location not specified',
                   latitude: lat,
                   longitude: lng,
                   hotelierLatitude: hotelierLat,

@@ -13,6 +13,7 @@ import '../../data/models/login_request_model_job.dart';
 import '../../domain/usecases/login_usecase.dart';
 import '../../domain/entities/login_request_job_entity.dart';
 import 'package:injectable/injectable.dart';
+import 'package:location_tracking/core/service/job_seeker_tracking_service.dart';
 part 'auth_job_event.dart';
 part 'auth_job_state.dart';
 
@@ -164,7 +165,7 @@ class AuthJobBloc extends Bloc<AuthJobEvent, AuthJobState> {
     try {
       final token = await getIt<AuthLocalDB>().getToken();
       await getIt<AuthLocalDB>().removeToken();
-      // SocketNotificationService().disconnect();
+      JobSeekerTrackingService().disconnect();
       emit(LogOutSuccessState());
       if (token != null) {
         getIt<ApiClient2>().post(url: AppUrls.logoutJobSeeker, tokenAuthorization: token).catchError((e) {
@@ -211,7 +212,7 @@ class AuthJobBloc extends Bloc<AuthJobEvent, AuthJobState> {
       if (r.preferredJob != null) {
         await getIt<AuthLocalDB>().setPreferredJob(r.preferredJob);
       }
-      // await SocketNotificationService().initSocketForJobSeeker(r.userId.toString());
+      JobSeekerTrackingService().initSocket();
       return;
     }
 
@@ -238,7 +239,7 @@ class AuthJobBloc extends Bloc<AuthJobEvent, AuthJobState> {
         if (r.preferredJob != null) {
           await getIt<AuthLocalDB>().setPreferredJob(r.preferredJob);
         }
-        // await SocketNotificationService().initSocketForJobSeeker(r.userId.toString());
+        JobSeekerTrackingService().initSocket();
       },
     );
   }
