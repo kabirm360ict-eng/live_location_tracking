@@ -76,10 +76,13 @@ class HotelierAuthBloc extends Bloc<HotelierAuthEvent, HotelierAuthState> {
     HotelierLogoutEvent event,
     Emitter<HotelierAuthState> emit,
   ) async {
+    profileInstance = null;
+    profileImage = null;
     emit(HotelierLogoutSuccessState());
   }
 
   // for get profile
+  ProfileResponseModelHiring? profileInstance;
   String? profileImage;
   Future<void> _getProfile(
     GetProfileHotelierEvent event,
@@ -87,6 +90,7 @@ class HotelierAuthBloc extends Bloc<HotelierAuthEvent, HotelierAuthState> {
   ) async {
     if (event.profile != null) {
       final r = event.profile!;
+      profileInstance = r;
       profileImage = r.photo;
       emit(GetProfileHotelierSuccessState(profile: r));
       if (r.userId != null) {
@@ -119,6 +123,7 @@ class HotelierAuthBloc extends Bloc<HotelierAuthEvent, HotelierAuthState> {
       (failure) async =>
           emit(GetProfileHotelierFailedState(message: failure.message)),
       (profile) async {
+        profileInstance = profile;
         profileImage = profile.photo;
         emit(GetProfileHotelierSuccessState(profile: profile));
         if (profile.userId != null) {

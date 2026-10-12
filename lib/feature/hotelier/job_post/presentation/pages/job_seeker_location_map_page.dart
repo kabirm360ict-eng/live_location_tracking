@@ -6,6 +6,10 @@ class JobSeekerLocationMapPage extends StatefulWidget {
   final double longitude;
   final String? jobSeekerName;
   final String? address;
+  final double? hotelierLatitude;
+  final double? hotelierLongitude;
+  final String? hotelierName;
+  final String? hotelierAddress;
 
   const JobSeekerLocationMapPage({
     super.key,
@@ -13,6 +17,10 @@ class JobSeekerLocationMapPage extends StatefulWidget {
     required this.longitude,
     this.jobSeekerName,
     this.address,
+    this.hotelierLatitude,
+    this.hotelierLongitude,
+    this.hotelierName,
+    this.hotelierAddress,
   });
 
   @override
@@ -42,13 +50,42 @@ class _JobSeekerLocationMapPageState extends State<JobSeekerLocationMapPage> {
         ),
       ),
     );
+
+    // ৩. Hotelier-এর লোকেশন থাকলে সেটির জন্যও মার্কার অ্যাড করা
+    if (widget.hotelierLatitude != null && widget.hotelierLongitude != null) {
+      _markers.add(
+        Marker(
+          markerId: const MarkerId('hotelier_marker'),
+          position: LatLng(widget.hotelierLatitude!, widget.hotelierLongitude!),
+          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure),
+          infoWindow: InfoWindow(
+            title: widget.hotelierName ?? 'Hotel Location',
+            snippet: widget.hotelierAddress ?? 'Work Location',
+          ),
+        ),
+      );
+    }
+  }
+
+  void _fitBothMarkers() {
+    if (widget.hotelierLatitude == null || widget.hotelierLongitude == null) return;
+    final southwest = LatLng(
+      [widget.latitude, widget.hotelierLatitude!].reduce((a, b) => a < b ? a : b),
+      [widget.longitude, widget.hotelierLongitude!].reduce((a, b) => a < b ? a : b),
+    );
+    final northeast = LatLng(
+      [widget.latitude, widget.hotelierLatitude!].reduce((a, b) => a > b ? a : b),
+      [widget.longitude, widget.hotelierLongitude!].reduce((a, b) => a > b ? a : b),
+    );
+    final bounds = LatLngBounds(southwest: southwest, northeast: northeast);
+    _mapController?.animateCamera(CameraUpdate.newLatLngBounds(bounds, 70));
   }
 
   // ভবিষ্যতে WebSocket থেকে নতুন লোকেশন আসলে এই ফাংশন দিয়ে সহজেই আপডেট করতে পারবেন
   void updateLocation(double newLat, double newLng) {
     setState(() {
       _currentPosition = LatLng(newLat, newLng);
-      _markers.clear();
+      _markers.removeWhere((m) => m.markerId.value == 'job_seeker_marker');
       _markers.add(
         Marker(
           markerId: const MarkerId('job_seeker_marker'),
@@ -84,6 +121,9 @@ class _JobSeekerLocationMapPageState extends State<JobSeekerLocationMapPage> {
         // ম্যাপ তৈরি হলে কন্ট্রোলার পাওয়া যায়
         onMapCreated: (controller) {
           _mapController = controller;
+          if (widget.hotelierLatitude != null && widget.hotelierLongitude != null) {
+            _fitBothMarkers();
+          }
         },
         myLocationButtonEnabled: true,
         zoomControlsEnabled: true,

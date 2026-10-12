@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:location_tracking/core/constants/app_size.dart';
+import 'package:location_tracking/feature/hotelier/auth/presentation/bloc/hotelier_auth_bloc.dart';
 import '../../domain/entity/hotelier_single_job_post_response_entity.dart';
 import '../bloc/job_post_bloc.dart';
 import 'job_seeker_location_map_page.dart';
@@ -27,6 +28,8 @@ class _HotelierJobPostDetailsPageState
       context.read<JobPostBloc>().add(
             GetHotelierJobPostDetailsEvent(widget.jobPostDetailId),
           );
+      final authBloc = context.read<HotelierAuthBloc>();
+      if (authBloc.profileInstance == null) {authBloc.add(GetProfileHotelierEvent());}
     });
   }
 
@@ -477,6 +480,13 @@ class _HotelierJobPostDetailsPageState
           final lat = double.tryParse('${applicant.latitude ?? ''}');
           final lng = double.tryParse('${applicant.longitude ?? ''}');
           if (lat != null && lng != null && lat != 0.0 && lng != 0.0) {
+            final hotelierProfile =context.read<HotelierAuthBloc>().profileInstance;
+            final hotelierLat =double.tryParse('${hotelierProfile?.latitude ?? ''}');
+            final hotelierLng =double.tryParse('${hotelierProfile?.longitude ?? ''}');
+            final hotelierName = hotelierProfile?.organizationName?.toString().trim().isNotEmpty == true
+                    ? hotelierProfile!.organizationName.toString(): hotelierProfile?.name?.toString();
+            final hotelierAddress =hotelierProfile?.address?.toString() ??hotelierProfile?.locationName?.toString();
+
             Navigator.push(
               context,
               MaterialPageRoute(
@@ -487,6 +497,10 @@ class _HotelierJobPostDetailsPageState
                       'Location not specified',
                   latitude: lat,
                   longitude: lng,
+                  hotelierLatitude: hotelierLat,
+                  hotelierLongitude: hotelierLng,
+                  hotelierName: hotelierName,
+                  hotelierAddress: hotelierAddress,
                 ),
               ),
             );
