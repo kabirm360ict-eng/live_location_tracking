@@ -9,7 +9,10 @@ class RoleSelectionPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Select Role'), centerTitle: true),
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: const Text('Select Role'),
+        centerTitle: true),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(AppSize.p24),
