@@ -208,9 +208,34 @@ class _JobSeekerLocationMapPageState extends State<JobSeekerLocationMapPage>
     }
     final destination =
         LatLng(widget.hotelierLatitude!, widget.hotelierLongitude!);
-    final List<LatLng> points = _roadRoutePoints.isNotEmpty
-        ? [_currentPosition, ..._roadRoutePoints]
-        : [_currentPosition, destination];
+
+    List<LatLng> points;
+    if (_roadRoutePoints.isEmpty) {
+      points = [_currentPosition, destination];
+    } else if (_roadRoutePoints.length < 2) {
+      points = [_currentPosition, ..._roadRoutePoints];
+    } else {
+      // Find the segment in _roadRoutePoints closest to _currentPosition.
+      // All points before this segment are behind the vehicle and must NOT be drawn backwards!
+      int bestSegmentIndex = 0;
+      double minDistance = double.infinity;
+
+      for (int i = 0; i < _roadRoutePoints.length - 1; i++) {
+        final d = _distanceToSegmentSquared(
+          _currentPosition,
+          _roadRoutePoints[i],
+          _roadRoutePoints[i + 1],
+        );
+        if (d < minDistance) {
+          minDistance = d;
+          bestSegmentIndex = i;
+        }
+      }
+
+      // Remaining forward points towards the destination
+      final aheadPoints = _roadRoutePoints.sublist(bestSegmentIndex + 1);
+      points = [_currentPosition, ...aheadPoints];
+    }
 
     _polylines = {
       Polyline(
@@ -228,20 +253,44 @@ class _JobSeekerLocationMapPageState extends State<JobSeekerLocationMapPage>
     };
   }
 
+  double _distanceToSegmentSquared(LatLng p, LatLng a, LatLng b) {
+    final l2 = _latLngDistanceSquared(a, b);
+    if (l2 == 0) return _latLngDistanceSquared(p, a);
+    final t = max(
+      0.0,
+      min(
+        1.0,
+        ((p.latitude - a.latitude) * (b.latitude - a.latitude) +
+                (p.longitude - a.longitude) * (b.longitude - a.longitude)) /
+            l2,
+      ),
+    );
+    final projLat = a.latitude + t * (b.latitude - a.latitude);
+    final projLng = a.longitude + t * (b.longitude - a.longitude);
+    return _latLngDistanceSquared(p, LatLng(projLat, projLng));
+  }
+
+  double _latLngDistanceSquared(LatLng p1, LatLng p2) {
+    final dLat = p1.latitude - p2.latitude;
+    final dLng = p1.longitude - p2.longitude;
+    return dLat * dLat + dLng * dLng;
+  }
+
   /// Fetch genuine turn-by-turn road route via OSRM
-  Future<void> _fetchRoadRoute() async {
+  Future<void> _fetchRoadRoute({LatLng? origin}) async {
     if (_isDisposed ||
         widget.hotelierLatitude == null ||
         widget.hotelierLongitude == null ||
         _isFetchingRoute) {
       return;
     }
+    final routeOrigin = origin ?? _currentPosition;
     _isFetchingRoute = true;
-    _lastFetchedRouteOrigin = _currentPosition;
+    _lastFetchedRouteOrigin = routeOrigin;
 
     try {
       final result = await RouteService.getRoadRoute(
-        origin: _currentPosition,
+        origin: routeOrigin,
         destination:
             LatLng(widget.hotelierLatitude!, widget.hotelierLongitude!),
       );
@@ -408,7 +457,7 @@ class _JobSeekerLocationMapPageState extends State<JobSeekerLocationMapPage>
           newPosition.latitude,
           newPosition.longitude,
         ) > 35) {
-      _fetchRoadRoute();
+      _fetchRoadRoute(origin: newPosition);
     }
   }
 

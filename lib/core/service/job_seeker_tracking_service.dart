@@ -209,27 +209,98 @@ class JobSeekerTrackingService {
       }
     }
 
-    // 3. Start position stream with distanceFilter (hardware-level movement detection)
-    const locationSettings = LocationSettings(
-      accuracy: LocationAccuracy.high,
-      distanceFilter: 8, // 👈 Only triggers when moved >= 8 meters
-    );
+    // 3. Platform-specific location settings with Foreground Notification Service
+    final LocationSettings locationSettings;
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      locationSettings = AndroidSettings(
+        accuracy: LocationAccuracy.high,
+        distanceFilter: 8, // 👈 Only triggers when moved >= 8 meters
+        forceLocationManager: false,
+        intervalDuration: const Duration(seconds: 3),
+        foregroundNotificationConfig: const ForegroundNotificationConfig(
+          notificationTitle: 'লাইভ লোকেশন ট্র্যাকিং সক্রিয়',
+          notificationText: 'আপনার লোকেশন হোটেলিয়ারের সাথে শেয়ার হচ্ছে',
+          enableWakeLock: true, // স্ক্রিন লক থাকলেও জিপিএস ও সিপিইউ চালু রাখবে
+          enableWifiLock: true,
+          setOngoing: true, // ইউজার অসাবধানতাবশত নোটিফিকেশন সরাতে পারবে না
+          notificationIcon: AndroidResource(
+            name: 'ic_launcher',
+            defType: 'mipmap',
+          ),
+        ),
+      );
+    } else if (defaultTargetPlatform == TargetPlatform.iOS || defaultTargetPlatform == TargetPlatform.macOS) {
+      locationSettings = AppleSettings(
+        accuracy: LocationAccuracy.high,
+        distanceFilter: 8,
+        activityType: ActivityType.fitness,
+        pauseLocationUpdatesAutomatically: false,
+        showBackgroundLocationIndicator: true,
+      );
+    } else {
+      locationSettings = const LocationSettings(
+        accuracy: LocationAccuracy.high,
+        distanceFilter: 8,
+      );
+    }
 
-    _positionStreamSubscription = Geolocator.getPositionStream(
-      locationSettings: locationSettings,
-    ).listen(
-      (Position position) {
-        _handlePositionUpdate(position);
-      },
-      onError: (err) {
-        if (kDebugMode) {
-          print('❌ [JobSeeker GPS] Position stream error: $err');
-        }
-      },
-    );
+    try {
+      _positionStreamSubscription = Geolocator.getPositionStream(
+        locationSettings: locationSettings,
+      ).listen(
+        (Position position) {
+          _handlePositionUpdate(position);
+        },
+        onError: (err) {
+          if (kDebugMode) {
+            print('❌ [JobSeeker GPS] Foreground stream error: $err');
+          }
+          _startFallbackStream();
+        },
+      );
 
+      if (kDebugMode) {
+        print(
+          '✅ [JobSeeker GPS] Live tracking stream ACTIVE with Foreground Service (distanceFilter: 8m)',
+        );
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('❌ [JobSeeker GPS] Foreground stream start exception: $e');
+      }
+      _startFallbackStream();
+    }
+  }
+
+  void _startFallbackStream() {
+    if (_positionStreamSubscription != null) {
+      _positionStreamSubscription?.cancel();
+      _positionStreamSubscription = null;
+    }
     if (kDebugMode) {
-      print('✅ [JobSeeker GPS] Live tracking stream ACTIVE (distanceFilter: 8m)');
+      print('⚠️ [JobSeeker GPS] Starting fallback standard GPS stream (no foreground service)');
+    }
+    const fallbackSettings = LocationSettings(
+      accuracy: LocationAccuracy.high,
+      distanceFilter: 8,
+    );
+    try {
+      _positionStreamSubscription = Geolocator.getPositionStream(
+        locationSettings: fallbackSettings,
+      ).listen(
+        (Position position) {
+          _handlePositionUpdate(position);
+        },
+        onError: (err) {
+          if (kDebugMode) {
+            print('❌ [JobSeeker GPS] Fallback stream error: $err');
+          }
+        },
+      );
+    } catch (e) {
+      if (kDebugMode) {
+        print('❌ [JobSeeker GPS] Fallback stream failed: $e');
+      }
     }
   }
 
