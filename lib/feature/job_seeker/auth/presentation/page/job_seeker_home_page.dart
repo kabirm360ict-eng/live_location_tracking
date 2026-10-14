@@ -5,6 +5,8 @@ import 'package:location_tracking/app/route/app_routes.dart';
 import 'package:location_tracking/core/constants/app_size.dart';
 import 'package:location_tracking/feature/job_seeker/auth/presentation/bloc/auth_job_bloc.dart';
 import 'package:location_tracking/core/service/job_seeker_tracking_service.dart';
+import 'package:location_tracking/feature/job_seeker/get_job/presentation/bloc/job_seeker_jobs_bloc.dart';
+import 'package:location_tracking/feature/job_seeker/get_job/presentation/widgets/job_seeker_jobs_section.dart';
 
 class JobSeekerHomePage extends StatefulWidget {
   const JobSeekerHomePage({super.key});
@@ -21,6 +23,7 @@ class _JobSeekerHomePageState extends State<JobSeekerHomePage> with WidgetsBindi
     WidgetsBinding.instance.addPostFrameCallback((_) {
       JobSeekerTrackingService().initSocket();
       JobSeekerTrackingService().checkGpsStatus();
+      context.read<JobSeekerJobsBloc>().add(const GetJobSeekerJobsEvent());
     });
   }
 
@@ -62,9 +65,14 @@ class _JobSeekerHomePageState extends State<JobSeekerHomePage> with WidgetsBindi
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(AppSize.p24),
+      body: RefreshIndicator(
+        onRefresh: () async {
+          context.read<JobSeekerJobsBloc>().add(const GetJobSeekerJobsEvent());
+          await JobSeekerTrackingService().checkGpsStatus();
+        },
         child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: const EdgeInsets.all(AppSize.p24),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -422,6 +430,7 @@ class _JobSeekerHomePageState extends State<JobSeekerHomePage> with WidgetsBindi
                 },
               ),
               AppSize.gapH24,
+              const JobSeekerJobsSection(),
               // ElevatedButton.icon(
               //   onPressed: () {
               //     Navigator.pushNamed(context, AppRoutes.jobSeekerSavedAddress);

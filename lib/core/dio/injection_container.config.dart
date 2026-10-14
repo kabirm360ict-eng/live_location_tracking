@@ -54,6 +54,16 @@ import '../../feature/job_seeker/auth/domain/usecases/logout_usecase.dart'
     as _i655;
 import '../../feature/job_seeker/auth/presentation/bloc/auth_job_bloc.dart'
     as _i908;
+import '../../feature/job_seeker/get_job/data/data_source/job_seeker_jobs_remote_data_source.dart'
+    as _i778;
+import '../../feature/job_seeker/get_job/data/repositories_impl/job_seeker_jobs_repository_impl.dart'
+    as _i839;
+import '../../feature/job_seeker/get_job/domain/repositories/job_seeker_jobs_repository.dart'
+    as _i78;
+import '../../feature/job_seeker/get_job/domain/usecases/get_job_seeker_jobs_usecase.dart'
+    as _i599;
+import '../../feature/job_seeker/get_job/presentation/bloc/job_seeker_jobs_bloc.dart'
+    as _i737;
 import '../local_database/auth_db.dart' as _i60;
 import '../network/api_client2.dart' as _i997;
 import 'register_module.dart' as _i291;
@@ -94,6 +104,17 @@ extension GetItInjectableX on _i174.GetIt {
         authLocalDB: gh<_i60.AuthLocalDB>(),
       ),
     );
+    gh.lazySingleton<_i778.JobSeekerJobsRemoteDataSource>(
+      () => _i778.JobSeekerJobsRemoteDataSourceImpl(
+        gh<_i60.AuthLocalDB>(),
+        gh<_i997.ApiClient2>(),
+      ),
+    );
+    gh.lazySingleton<_i78.JobSeekerJobsRepository>(
+      () => _i839.JobSeekerJobsRepositoryImpl(
+        remoteDataSource: gh<_i778.JobSeekerJobsRemoteDataSource>(),
+      ),
+    );
     gh.lazySingleton<_i948.HotelierAuthRepository>(
       () => _i912.HotelierAuthRepositoryImpl(
         remoteDataSource: gh<_i491.HotelierAuthRemoteDataSource>(),
@@ -128,6 +149,12 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i433.HotelierLoginUseCase>(
       () => _i433.HotelierLoginUseCase(gh<_i948.HotelierAuthRepository>()),
+    );
+    gh.factory<_i599.GetJobSeekerJobsUseCase>(
+      () => _i599.GetJobSeekerJobsUseCase(gh<_i78.JobSeekerJobsRepository>()),
+    );
+    gh.lazySingleton<_i737.JobSeekerJobsBloc>(
+      () => _i737.JobSeekerJobsBloc(gh<_i599.GetJobSeekerJobsUseCase>()),
     );
     gh.lazySingleton<_i50.JobPostBloc>(
       () => _i50.JobPostBloc(

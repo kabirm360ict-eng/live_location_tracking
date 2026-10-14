@@ -7,6 +7,7 @@ import 'package:location_tracking/core/dio/injection_container.dart';
 import 'package:location_tracking/feature/hotelier/auth/presentation/bloc/hotelier_auth_bloc.dart';
 import 'package:location_tracking/feature/hotelier/job_post/presentation/bloc/job_post_bloc.dart';
 import 'package:location_tracking/feature/job_seeker/auth/presentation/bloc/auth_job_bloc.dart';
+import 'package:location_tracking/feature/job_seeker/get_job/presentation/bloc/job_seeker_jobs_bloc.dart';
 
 class MyApp extends StatelessWidget {
   static final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -20,6 +21,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => getIt<AuthJobBloc>()),
         BlocProvider(create: (context) => getIt<HotelierAuthBloc>()),
         BlocProvider(create: (context) => getIt<JobPostBloc>()),
+        BlocProvider(create: (context) => getIt<JobSeekerJobsBloc>()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
