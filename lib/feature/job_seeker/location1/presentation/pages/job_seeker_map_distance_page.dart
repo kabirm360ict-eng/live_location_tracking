@@ -6,11 +6,17 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:location_tracking/core/service/job_seeker_tracking_service.dart';
 import 'package:location_tracking/core/service/route_service.dart';
 import 'package:location_tracking/core/utilities/get_address.dart';
+import 'package:location_tracking/feature/job_seeker/get_job/domain/entities/job_seeker_job_item_entity.dart';
 import '../widgets/distance_info_card.dart';
 import '../widgets/location_search_modal.dart';
 
 class JobSeekerMapDistancePage extends StatefulWidget {
-  const JobSeekerMapDistancePage({super.key});
+  final JobSeekerJobItemEntity? job;
+
+  const JobSeekerMapDistancePage({
+    super.key,
+    this.job,
+  });
 
   @override
   State<JobSeekerMapDistancePage> createState() => _JobSeekerMapDistancePageState();
@@ -43,7 +49,19 @@ class _JobSeekerMapDistancePageState extends State<JobSeekerMapDistancePage> {
   @override
   void initState() {
     super.initState();
+    _initDestinationFromJob();
     _initJobSeekerLocation();
+  }
+
+  void _initDestinationFromJob() {
+    final job = widget.job;
+    if (job != null && job.latitudeDouble != null && job.longitudeDouble != null) {
+      _destinationPosition = LatLng(job.latitudeDouble!, job.longitudeDouble!);
+      _destinationAddress = (job.locationAddress != null && job.locationAddress!.isNotEmpty)
+          ? job.locationAddress
+          : job.organizationName;
+      _updateMarkers();
+    }
   }
 
   Future<void> _initJobSeekerLocation() async {
@@ -102,11 +120,18 @@ class _JobSeekerMapDistancePageState extends State<JobSeekerMapDistancePage> {
 
       _updateMarkers();
 
-      _mapController?.animateCamera(
-        CameraUpdate.newCameraPosition(
-          CameraPosition(target: latLng, zoom: 15),
-        ),
-      );
+      if (_destinationPosition != null) {
+        _setDestination(
+          _destinationPosition!,
+          addressName: _destinationAddress,
+        );
+      } else {
+        _mapController?.animateCamera(
+          CameraUpdate.newCameraPosition(
+            CameraPosition(target: latLng, zoom: 15),
+          ),
+        );
+      }
     } catch (e) {
       setState(() {
         _gpsError = 'Could not fetch current GPS: $e';
@@ -274,9 +299,13 @@ class _JobSeekerMapDistancePageState extends State<JobSeekerMapDistancePage> {
 
     final bounds = LatLngBounds(southwest: southWest, northeast: northEast);
 
-    _mapController?.animateCamera(
-      CameraUpdate.newLatLngBounds(bounds, 80),
-    );
+    Future.delayed(const Duration(milliseconds: 300), () {
+      if (mounted) {
+        _mapController?.animateCamera(
+          CameraUpdate.newLatLngBounds(bounds, 80),
+        );
+      }
+    });
   }
 
   void _onMapTapped(LatLng tappedPoint) async {
@@ -437,7 +466,9 @@ class _JobSeekerMapDistancePageState extends State<JobSeekerMapDistancePage> {
             onTap: _onMapTapped,
             onMapCreated: (controller) {
               _mapController = controller;
-              if (_jobSeekerPosition != null) {
+              if (_destinationPosition != null && _jobSeekerPosition != null) {
+                _fitCameraBounds();
+              } else if (_jobSeekerPosition != null) {
                 controller.animateCamera(
                   CameraUpdate.newLatLngZoom(_jobSeekerPosition!, 15),
                 );
