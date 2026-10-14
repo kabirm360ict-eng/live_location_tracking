@@ -14,6 +14,7 @@ import 'package:location_tracking/feature/job_seeker/profile/presentation/pages/
 import 'package:location_tracking/feature/job_seeker/profile/data/model/profile_get_job_seeker_model.dart';
 import 'package:location_tracking/feature/role_selection/role_selection_page.dart';
 import 'package:location_tracking/feature/job_seeker/auth/presentation/page/job_seeker_home_page.dart';
+import 'package:location_tracking/feature/job_seeker/location1/presentation/pages/job_seeker_map_distance_page.dart';
 import 'package:location_tracking/feature/splash_screen/splash_screen.dart';
 import 'package:page_transition/page_transition.dart';
 
@@ -100,6 +101,12 @@ class AppRouter {
         type: PageTransitionType.fade,
         settings: settings,
         child: HotelierJobPostDetailsPage(jobPostDetailId: id),
+        );
+      case AppRoutes.jobSeekerMapDistancePage:
+       return PageTransition(
+        type: PageTransitionType.rightToLeft,
+        settings: settings,
+        child: const JobSeekerMapDistancePage(),
         );
 
       default:
